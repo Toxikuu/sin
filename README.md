@@ -26,7 +26,7 @@ predefined services.
 LFS, but should work anywhere. Sin is extremely simple, but you should still
 know what you're doing.
 
-Peruse the ~35 line Makefile to see how to install sin and what variables it
+Peruse the ~40 line Makefile to see how to install sin and what variables it
 supports.
 
 ## Advice
