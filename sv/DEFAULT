@@ -5,7 +5,7 @@
 
 udev
 tty1
-network
+net
 clock
 dbus
 tty2

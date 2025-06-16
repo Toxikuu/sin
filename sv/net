@@ -4,8 +4,10 @@ CARD="enp63s0"
 
 start() {
     ip link set up "$CARD"
+    dhcpcd &
 }
 
 stop() {
     ip link set down "$CARD"
+    pkill dhcpcd
 }
