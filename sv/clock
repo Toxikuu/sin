@@ -1,0 +1,14 @@
+#!/bin/sh
+
+start() {
+    hwclock -s
+    if command -v chronyd >/dev/null 2>&1 && ! pidof chronyd >/dev/null; then
+        chronyd
+    fi
+}
+
+stop() {
+    if ! pidof chronyd >dev/null; then
+        hwclock -w
+    fi
+}

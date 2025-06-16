@@ -1,0 +1,14 @@
+#!/bin/sh
+
+start() {
+    SYSTEMD_LOG_TARGET=kmsg udevd   --daemon
+    udevadm trigger --action=add    --type=subsystems 1>&2
+    udevadm trigger --action=add    --type=devices    1>&2
+    udevadm trigger --action=change --type=devices    1>&2
+    udevadm settle
+}
+
+stop() {
+    udevadm control --exit
+    pkill udevd
+}

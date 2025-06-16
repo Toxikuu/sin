@@ -1,0 +1,13 @@
+# /etc/sin/services/DEFAULT
+# To enable a service by default, write its name here.
+# Services are executed in the order listed.
+# Comments and white space are ignored.
+
+udev
+tty1
+network
+clock
+dbus
+tty2
+tty3
+# tty4

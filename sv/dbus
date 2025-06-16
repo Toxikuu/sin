@@ -1,0 +1,11 @@
+#!/bin/bash
+
+start() {
+    mkdir -p /run/dbus
+    dbus-uuidgen --ensure
+    dbus-daemon --system
+}
+
+stop() {
+    pkill "dbus-daemon --system"
+}

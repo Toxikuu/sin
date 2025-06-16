@@ -1,0 +1,77 @@
+#!/bin/sh
+# This simple, POSIX-compliant init is part of sin
+# With love, by Tox
+
+. /etc/sin/lib
+
+# Tell dmesg to stfu and not overwrite our logs
+dmesg -n 1
+
+# Banner
+
+clear
+printf "\n  \033[1;35m*\033[0m Sin is starting your computer \033[1;35m*\033[0m\n"
+printf " -----------------------------------\n\n"
+
+# File system
+
+log "Mounting pseudo file systems"
+
+mnt nosuid,noexec,nodev    proc     proc /proc
+mnt nosuid,noexec,nodev    sysfs    sys  /sys
+mnt mode=0755,nosuid       devtmpfs dev  /dev
+mnt mode=0755,nosuid,nodev tmpfs    run  /run
+
+mkdir -p /run/user /run/lock /run/log /dev/pts /dev/shm
+
+mnt mode=0620,gid=5,nosuid,noexec devpts devpts /dev/pts
+mnt mode=1777,nosuid,nodev        tmpfs  shm    /dev/shm
+
+ln -sv /proc/self/fd /dev/fd
+ln -sv fd/0 /dev/stdin
+ln -sv fd/1 /dev/stdout
+ln -sv fd/2 /dev/stderr
+
+log "Checking file systems"
+fsck -pACTV || sos
+
+log "Remounting rootfs as rw"
+mount -vo remount,rw / || sos
+
+log "Mounting all local filesystems"
+mount -va || sos
+
+# Network
+
+log "Setting up loopback interface"
+ip link set lo up
+
+log "Setting hostname"
+read -r hostname < /etc/hostname
+printf %s "${hostname:-lfs}" > /proc/sys/kernel/hostname
+
+# Finalize
+
+upt=$(awk '{print $1}' /proc/uptime)
+log "Booted in $upt seconds"
+
+# Services
+
+log "Running default services"
+while IFS= read -r line; do
+    # Trim whitespace
+    # Stolen from https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816
+    line="${line#"${line%%[![:space:]]*}"}"
+    line="${line%"${line##*[![:space:]]}"}"
+
+    # Skip comments and empty lines
+    case "$line" in
+        ''|\#*) continue ;;
+    esac
+
+    echo "$line"
+done < /etc/sin/sv/DEFAULT
+
+# Sleep forever, portably
+# Stolen from https://stackoverflow.com/questions/2935183/bash-infinite-sleep-infinite-blocking
+while :; do sleep 2073600; done

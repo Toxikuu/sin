@@ -1,0 +1,11 @@
+#!/bin/sh
+
+CARD="enp63s0"
+
+start() {
+    ip link set up "$CARD"
+}
+
+stop() {
+    ip link set down "$CARD"
+}

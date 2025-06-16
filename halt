@@ -1,0 +1,43 @@
+#!/bin/sh
+
+. /etc/sin/lib
+
+# Banner
+
+clear
+printf "\n  \033[1;35m*\033[0m Sin is stopping your computer \033[1;35m*\033[0m\n"
+printf " -----------------------------------\n\n"
+
+# Kill everything except PID 1 and this script
+
+log "Terminating and killing all processes"
+kill -s TERM $(ps -eo pid= | grep -v "^$$" | grep -v "^1$")
+sleep 1
+kill -s TERM $(ps -eo pid= | grep -v "^$$" | grep -v "^1$")
+
+# Cleanup
+
+rm -rf   /tmp
+mkdir -p /tmp
+
+# File system
+
+log "Unmounting file systems"
+umount -rat nosysfs,proc,devtmpfs,tmpfs
+
+log "Remounting rootfs as ro"
+mount -o ro,remount /
+sync
+
+# Shutdown
+
+echo 1 > /proc/sys/kernel/sysrq
+
+case "$(readlink "$0")" in
+    shutdown|halt)
+        echo o > /proc/sysrq-trigger
+        ;;
+    reboot)
+        echo b > /proc/sysrq-trigger
+        ;;
+esac

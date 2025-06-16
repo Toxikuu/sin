@@ -1,0 +1,38 @@
+#!/bin/sh
+
+. "/etc/sin/sv/$2" || die "$0: unknown service '$1'"
+
+usage() {
+    cat << .
+Usage: $0 [OPTIONS] SERVICE
+
+Options:
+    --start         | -s    Start a service
+    --kill | --stop | -k    Stop a service
+    --restart       | -r    Restart a service
+    --version       | -V    Display sin's version
+    --help          | -h    Show this help message and exit
+.
+}
+
+case $1 in
+    --start|-s)
+        start || die "$0: failed to start '$1'"
+        ;;
+    --kill|--stop|-k)
+        stop || die "$0: failed to stop '$1'"
+        ;;
+    --restart|-r)
+        if ! type restart | grep -q function; then
+            ( stop && start ) || die "$0: failed to restart '$1'"
+        else
+            restart || die "$0: failed to restart '$1'"
+        fi
+        ;;
+    --version|-V)
+        echo "0.0.0"
+        ;;
+    --help|-h)
+        usage
+        ;;
+esac
