@@ -1,10 +1,12 @@
+ASM     := yasm
+LD      := ld
 SCDOC   := scdoc
 PREFIX  := /usr
 SBIN    := $(PREFIX)/sbin
 BIN     := $(PREFIX)/bin
 MAN     := $(PREFIX)/share/man
 
-all: build-man
+all: build
 
 install: install-man
 	install -vDm644 lib  $(DESTDIR)/etc/sin/lib
@@ -24,6 +26,10 @@ install-man:
 		sect=$${m##*.};         \
 		install -vDm644 man/$$m -t $(DESTDIR)$(MAN)/man$$sect/; \
 	done
+
+build: build-man
+	$(ASM) -f elf64 -o pause.o pause.asm
+	$(LD)  -o pause    pause.o
 
 build-man:
 	@for m in man/*.scd; do     \
