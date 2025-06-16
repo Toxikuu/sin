@@ -16,19 +16,22 @@ starting, stopping, and restarting services. The services are defined in
 
 The services enabled at boot are defined in `/etc/sin/sv/DEFAULT`.
 
-<!-- TODO: Replace the below two lines with man pages when they're written. -->
-For information about running services, run `run -h`.
-For information about writing services, run `cat /etc/sin/sv/[a-z]` and read the
-second paragraph in this section.
+For more information about running services, run `run -h` and `man run`.
+
+For more information about writing services, run `man sv` and peruse the
+predefined services.
 
 ## Installation
 **Don't** install this on a system that already has an `init`. This is made for
 LFS, but should work anywhere. Sin is extremely simple, but you should still
-know what you're doing, especially since proper documentation currently doesn't
-exist.
+know what you're doing.
 
-Peruse the ~20 line Makefile to see how to install sin and what variables it
+Peruse the ~35 line Makefile to see how to install sin and what variables it
 supports.
+
+## Advice
+I'd highly recommend playing around with the default services and writing your
+own. The defaults serve as reference implementations.
 
 ## Credits
 Thank you to:
