@@ -1,9 +1,6 @@
 # Library for sin
 # Much of this is stolen from KISS's init
 
-export TERM=linux
-export PATH="/usr/bin:/usr/sbin"
-
 log() {
     local msg="$1"; shift
     printf " [\033[0;35m*\033[0;0m] " # decor
@@ -35,5 +32,5 @@ sos() {
 
 die() {
     log "$1" >&2
-    return "${2:-1}"
+    exit "${2:-1}"
 }

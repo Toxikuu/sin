@@ -4,6 +4,9 @@
 
 . /etc/sin/lib
 
+export TERM=linux
+export PATH="/usr/bin:/usr/sbin"
+
 # Tell dmesg to stfu and not overwrite our logs
 dmesg -n 1
 
