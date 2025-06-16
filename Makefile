@@ -4,6 +4,8 @@ SBIN    := $(PREFIX)/sbin
 BIN     := $(PREFIX)/bin
 MAN     := $(PREFIX)/share/man
 
+all: build-man
+
 install: install-man
 	install -vDm644 lib  $(DESTDIR)/etc/sin/lib
 	cp      -af     sv   $(DESTDIR)/etc/sin/
@@ -32,4 +34,4 @@ build-man:
 clean:
 	rm -f man/*.[1-8]
 
-.PHONY: install install-man build-man clean
+.PHONY: all install install-man build-man clean
