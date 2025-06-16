@@ -16,8 +16,10 @@ starting, stopping, and restarting services. The services are defined in
 
 The services enabled at boot are defined in `/etc/sin/sv/DEFAULT`.
 
-To start a service, run `run -s $service`
-To stop a service, run `run -k $service`
+<!-- TODO: Replace the below two lines with man pages when they're written. -->
+For information about running services, run `run -h`.
+For information about writing services, run `cat /etc/sin/sv/[a-z]` and read the
+second paragraph in this section.
 
 ## Installation
 **Don't** install this on a system that already has an `init`. This is made for
