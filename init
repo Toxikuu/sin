@@ -75,6 +75,47 @@ while IFS= read -r line; do
     run -s "$line"
 done < /etc/sin/sv/DEFAULT
 
-# Sleep forever, portably
-# Stolen from https://stackoverflow.com/questions/2935183/bash-infinite-sleep-infinite-blocking
-while :; do sleep 2073600; done
+
+halt() {
+
+# Kill everything
+
+log "Terminating and killing all processes"
+kill -s TERM -1
+sleep 1
+kill -s KILL -1
+
+# Cleanup
+
+log "Cleaning up"
+find /tmp -mindepth 1 -delete
+
+# File system
+
+log "Unmounting filesystems"
+umount -rat nosysfs,proc,devtmpfs,tmpfs
+
+log "Remounting rootfs as ro"
+mount -o ro,remount /
+sync
+
+# Shutdown
+
+echo 1 > /proc/sys/kernel/sysrq
+
+case "$HALT" in
+    shutdown) echo o > /proc/sysrq-trigger ;;
+    reboot)   echo b > /proc/sysrq-trigger ;;
+    *)
+        log "Unknown HALT value: $HALT"
+        log "Going with reboot"
+        echo b > /proc/sysrq-trigger
+        ;;
+esac
+
+}
+
+
+# Pause indefinitely until TERM is received
+trap 'echo "Received TERM"; halt' TERM
+pause
