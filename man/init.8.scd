@@ -27,7 +27,7 @@ It does the following:
 . Sets the hostname from /etc/hostname
 . Displays boot time
 . Starts services defined in /etc/sin/sv/DEFAULT
-. Sleeps forever (like me fr)
+. Sleeps forever (I wish)
 
 
 # SEE ALSO

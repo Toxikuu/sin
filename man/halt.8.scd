@@ -21,10 +21,14 @@ whether it was called from *shutdown* or *reboot*.
 Before shutting down, it kills all processes, cleans up /tmp, unmounts
 filesystems, remounts root as read only, and syncs filesystems.
 
+The *halt* script takes no arguments.
 
-# EXAMPLES
+
+# INVOCATION
 
 	*shutdown*
+
+	*reboot*
 
 
 # SEE ALSO
