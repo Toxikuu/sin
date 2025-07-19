@@ -1,7 +1,7 @@
 #!/bin/sh
 
 start() {
-    hwclock -s
+    hwclock -sv
     if command -v chronyd >/dev/null 2>&1 && ! pidof chronyd >/dev/null; then
         chronyd
     fi
@@ -9,6 +9,6 @@ start() {
 
 stop() {
     if ! pidof chronyd >dev/null; then
-        hwclock -w
+        hwclock -wv
     fi
 }

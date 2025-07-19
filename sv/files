@@ -1,0 +1,11 @@
+#!/bin/bash
+
+start() {
+    install -vdm1777 /tmp/s # I like having a scratchpad at /tmp/s
+    install -vdm1777 /tmp/.ICE-unix
+    install -vdm1777 /tmp/.X11-unix
+}
+
+stop() {
+    exit 0
+}

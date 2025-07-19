@@ -1,9 +1,0 @@
-#!/bin/sh
-
-start() {
-    pipewire-launcher.sh
-}
-
-stop() {
-    die "not implemented"
-}

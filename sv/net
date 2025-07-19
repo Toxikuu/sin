@@ -1,6 +1,9 @@
 #!/bin/sh
 
-CARD="enp63s0"
+# Find the first non-loopback interface
+CARD="$(ip -br link show | cut -d\  -f1 | grep -v lo | head -n1)"
+
+# CARD="enp63s0" # or hardcode your own
 
 start() {
     ip link set up "$CARD"
@@ -9,5 +12,5 @@ start() {
 
 stop() {
     ip link set down "$CARD"
-    pkill dhcpcd
+    killall dhcpcd || pkill dhcpcd
 }

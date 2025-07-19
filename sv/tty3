@@ -2,7 +2,7 @@
 
 start() {
     while :; do
-        openvt -w -f -c 3 -- sh -c 'exec agetty -i --delay 1 -J -s 38400 -t 600 tty3 tty3'
+        openvt -w -f -c 3 -- sh -c 'exec agetty tty3'
         sleep 0.1
     done &
 }
