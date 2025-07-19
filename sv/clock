@@ -1,4 +1,7 @@
 #!/bin/sh
+#
+# Store and restore time from the hardware clock.
+# If available, run chronyd as well.
 
 start() {
     hwclock -sv

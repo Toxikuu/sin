@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Run the udev daemon
+
 start() {
     SYSTEMD_LOG_TARGET=kmsg udevd   --daemon
     udevadm trigger --action=add    --type=subsystems 1>&2

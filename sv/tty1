@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Start agetty on tty1, respawning it as needed
+
 start() {
     while :; do
         openvt -w -f -c 1 -- sh -c 'exec agetty -J tty1'

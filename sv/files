@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Automatically create files on boot
+
 start() {
     install -vdm1777 /tmp/s # I like having a scratchpad at /tmp/s
     install -vdm1777 /tmp/.ICE-unix
