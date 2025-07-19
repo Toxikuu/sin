@@ -26,25 +26,33 @@ install-man:
 	@for m in man/*.[1-8]; do   \
 		m=$${m##*/};            \
 		sect=$${m##*.};         \
-		install -vDm644 man/$$m -t $(DESTDIR)$(MAN)/man$$sect/; \
+		install -vDm644 target/$$m -t $(DESTDIR)$(MAN)/man$$sect/; \
 	done
+	
+	ln -sf halt.8 $(DESTDIR)$(MAN)/man8/reboot.8
+	ln -sf halt.8 $(DESTDIR)$(MAN)/man8/shutdown.8
 
-build: build-man pause
+build: build-man pause add-version
 
-build-man:
+target:
+	mkdir -p target
+
+build-man: target
 	@for m in man/*.scd; do     \
-		out=$${m%.scd};         \
-		$(SCDOC) < $$m > $$out; \
+		m=$${m##*/};            \
+		out=target/$${m%.scd};  \
+		$(SCDOC) < man/$$m > $$out; \
 	done
 
-pause:
+pause: target
 	$(ASM) -f bin -o target/pause src/pause.asm
 
-add-version:
-	sed 's,|VERSION|,$(VERSION),g' -i src/*
+add-version: target
+	@for s in $(shell find src -type f ! -name '*.asm' -exec basename {} \;); do \
+		sed 's,|VERSION|,$(VERSION),g' src/$$s > target/$$s; \
+	done
 
 clean:
-	rm -f  man/*.[1-8]
 	rm -rf target
 
 .PHONY: all install install-man build-man build clean
