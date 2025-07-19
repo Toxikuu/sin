@@ -49,10 +49,10 @@ die() {
     exit "${2:-1}"
 }
 
-# minimal implementation of sysvinit/ubase killall5
-# $1 is the signal to send, defaulting to -TERM if unset
+# minimal implementation of sysvinit/ubase `killall5`
+# `$1` is the signal to send `using kill`, defaulting to `-TERM` if unset
 killall5() {
-    curr_sid=$(awk "\$1 == $$ { print \$6 }")
+    our_sid=$(awk '{ print $6 }' "/proc/$$/stat" 2>/dev/null)
 
     for pid in /proc/[0-9]*; do
         pid="${pid#/proc/}"
@@ -60,11 +60,9 @@ killall5() {
         # skip self
         [ "$pid" -eq "$$" ] && continue
 
-        # get process's sid
+        # skip self: the sequel
         sid=$(awk '{ print $6 }' "/proc/$pid/stat" 2>/dev/null) || continue
-
-        # skip if our sid
-        [ "$sid" -eq "$curr_sid" ] && continue
+        [ "$sid" -eq "$our_sid" ] && continue
 
         kill "${1:--TERM}" "$pid" 2>/dev/null
     done
