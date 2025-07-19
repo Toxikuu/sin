@@ -15,10 +15,10 @@ SV(1)
 
 # DESCRIPTION
 
-Sin service definitions are defined in /etc/sin/sv. They consist of at minimum a
-start and stop function. If custom restart logic is desired, the restart
-function may be defined; otherwise, stop and start are called whenever the user
-requests a service be restarted.
+Sin service definitions are defined in /etc/sin/sv. They are shell scripts
+consisting of at minimum a start and stop function. If custom restart logic is
+desired, the restart function may be defined; otherwise, stop and start are
+called whenever the user requests a service be restarted.
 
 These functions *must not* hang.
 
