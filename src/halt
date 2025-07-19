@@ -5,14 +5,15 @@
 export TERM=linux
 export PATH="/usr/bin:/usr/sbin"
 export HALT="${0##*/}"
+echo "$HALT" > /halt
 
 # Banner
 
 clear
 printf " ===================================\n"
-printf "\n  \033[1;35m*\033[0m Sin v0.0.0 initiating %s \033[1;35m*\033[0m\n" "$HALT"
+printf " \033[1;34m*\033[0m Sin v|VERSION| initiating %s \033[1;34m*\033[0m\n" "$HALT"
 printf " ===================================\n\n"
 
-# Send SIGTERM to /sbin/init to initiate shutdown sequence
+# Send SIGTERM to /sbin/init to initiate halt sequence
 
 kill 1

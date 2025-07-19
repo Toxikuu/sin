@@ -33,7 +33,7 @@ case $1 in
         fi
         ;;
     --version|-V)
-        echo "0.0.0"
+        echo "|VERSION|"
         ;;
     --help|-h)
         usage

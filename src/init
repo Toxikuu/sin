@@ -13,8 +13,9 @@ dmesg -n 1
 # Banner
 
 clear
-printf "\n  \033[1;35m*\033[0m Sin is starting your computer \033[1;35m*\033[0m\n"
-printf " -----------------------------------\n\n"
+printf " ================================\n"
+printf "  \033[1;34m*\033[0m Sin v|VERSION| initiating boot \033[1;34m*\033[0m\n"
+printf " ================================\n\n"
 
 # File system
 
@@ -25,7 +26,7 @@ mnt nosuid,noexec,nodev    sysfs    sys  /sys
 mnt mode=0755,nosuid       devtmpfs dev  /dev
 mnt mode=0755,nosuid,nodev tmpfs    run  /run
 
-mkdir -p /run/user /run/lock /run/log /dev/pts /dev/shm
+mkdir -pv /run/user /run/lock /run/log /dev/pts /dev/shm
 
 mnt mode=0620,gid=5,nosuid,noexec devpts devpts /dev/pts
 mnt mode=1777,nosuid,nodev        tmpfs  shm    /dev/shm
@@ -44,6 +45,10 @@ mount -vo remount,rw / || sos
 log "Mounting all local filesystems"
 mount -va || sos
 
+rm -f /halt
+clear_log
+flush_log
+
 # Network
 
 log "Setting up loopback interface"
@@ -57,6 +62,7 @@ printf %s "${hostname:-lfs}" > /proc/sys/kernel/hostname
 
 upt=$(awk '{print $1}' /proc/uptime)
 log "Booted in $upt seconds"
+flush_log
 
 # Services
 
@@ -73,49 +79,75 @@ while IFS= read -r line; do
     esac
 
     run -s "$line"
+    log "Starting $line"
 done < /etc/sin/sv/DEFAULT
 
+flush_log
 
-halt() {
+
+do_halt() {
 
 # Kill everything
 
 log "Terminating and killing all processes"
-kill -s TERM -1
+killall5 -TERM
 sleep 1
-kill -s KILL -1
+killall5 -KILL
+# for pid in $(ps -eo pid | tail -n +2); do [ "$pid" != "$$" ] && [ "$pid" != "1" ] && kill -TERM "$pid"; done
+# sleep 1
+# for pid in $(ps -eo pid | tail -n +2); do [ "$pid" != "$$" ] && [ "$pid" != "1" ] && kill -KILL "$pid"; done
 
 # Cleanup
 
-log "Cleaning up"
+log "Cleaning /tmp"
 find /tmp -mindepth 1 -delete
+
+flush_log
 
 # File system
 
 log "Unmounting filesystems"
-umount -rat nosysfs,proc,devtmpfs,tmpfs
+umount -rat nosysfs,noproc,nodevtmpfs,tmpfs
 
 log "Remounting rootfs as ro"
 mount -o ro,remount /
-sync
 
 # Shutdown
 
 echo 1 > /proc/sys/kernel/sysrq
+HALT="$(cat /halt)"
 
+log "Evaluating final case statement"
 case "$HALT" in
-    shutdown) echo o > /proc/sysrq-trigger ;;
-    reboot)   echo b > /proc/sysrq-trigger ;;
+    shutdown)
+        log "Telling kernel to shutdown"
+        sync
+        echo o > /proc/sysrq-trigger
+        ;;
+    reboot)
+        log "Telling kernel to reboot"
+        sync
+        echo b > /proc/sysrq-trigger
+        ;;
     *)
         log "Unknown HALT value: $HALT"
         log "Going with reboot"
+        sync
         echo b > /proc/sysrq-trigger
         ;;
 esac
 
+# TODO: Remove this once I conclude it's unnecessary
+log "Went past final case statement"
+sync
+sleep 10
+log "You shouldn't see this"
+sync
+
 }
 
 
-# Pause indefinitely until TERM is received
-trap 'echo "Received TERM"; halt' TERM
-pause
+# Pause indefinitely until TERM is received, at which point we halt
+trap 'echo "Received TERM"; do_halt' TERM
+pause &
+wait $!
