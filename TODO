@@ -1,1 +1,5 @@
 Write a man page for pause, probably copy void's
+
+Move lib to /lib/sin
+
+Formatting should account for variable-length version
