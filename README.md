@@ -14,7 +14,8 @@ starting, stopping, and restarting services. The services are defined in
 3. `restart` -> the commands to restart a service, defaulting to `stop && start`
    if undefined.
 
-The services enabled at boot are defined in `/etc/sin/sv/DEFAULT`.
+Service supervision is a nongoal. The services enabled at boot are defined in
+`/etc/sin/sv/DEFAULT`.
 
 For more information about running services, run `run -h` and `man run`.
 
