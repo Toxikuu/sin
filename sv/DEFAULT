@@ -5,6 +5,7 @@
 
 udev
 tty1
+files
 net
 clock
 dbus
