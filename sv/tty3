@@ -5,7 +5,7 @@
 start() {
     while :; do
         openvt -w -f -c 3 -- sh -c 'exec agetty tty3'
-        sleep 0.1
+        sleep 2
     done &
 }
 
