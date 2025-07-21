@@ -23,10 +23,10 @@ install: install-man
 	install -Dm755  target/run   $(DESTDIR)$(BIN)/run
 
 install-man:
-	@for m in man/*.[1-8]; do   \
+	@for m in target/*.[1-8]; do   \
 		m=$${m##*/};            \
 		sect=$${m##*.};         \
-		install -vDm644 target/$$m -t $(DESTDIR)$(MAN)/man$$sect/; \
+		install -vDm644 target/$${m} -t $(DESTDIR)$(MAN)/man$${sect}/; \
 	done
 	
 	ln -sf halt.8 $(DESTDIR)$(MAN)/man8/reboot.8
